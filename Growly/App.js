@@ -1,4 +1,5 @@
 import { Text, View, TextInput, TouchableOpacity, FlatList } from 'react-native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { styles } from './App.styles';
 import { useState } from 'react';
 
@@ -34,14 +35,26 @@ export default function App() {
 
   const renderItem = ({ item }) => {
     return (
-      <View>
-        <Text>{item.text} {item.completed ? '完了' : '未完了'}</Text>
-        <View>
-          <TouchableOpacity onPress={() => handleToggleTask(item.id)}>
-            <Text>完了</Text>
+      <View style={styles.card}>
+        <View style={styles.taskInfo}>
+          <Text style={[styles.taskText, item.completed && styles.completedTaskText]}>
+            {item.text} {item.completed ? '完了' : '未完了'}
+          </Text>
+        </View>
+        <View style={styles.actionContainer}>
+          <TouchableOpacity
+            onPress={() => handleToggleTask(item.id)}
+            style={[styles.actionButton, styles.toggleButton, item.completed && styles.completedToggleButton]}
+          >
+            <Text style={[styles.toggleButtonText, item.completed && styles.completedToggleButtonText]}>
+              完了
+            </Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => handleDeleteTask(item.id)}>
-            <Text>削除</Text>
+          <TouchableOpacity
+            onPress={() => handleDeleteTask(item.id)}
+            style={[styles.actionButton, styles.deleteButton]}
+          >
+            <Text style={styles.deleteButtonText}>削除</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -49,21 +62,34 @@ export default function App() {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Growly!</Text>
-      <TextInput placeholder="タスクを入力" style={styles.input} value={taskText} onChangeText={setTaskText} />
-      <TouchableOpacity style={styles.button} onPress={handleAddTask}>
-        <Text style={styles.buttonText}>追加</Text>
-      </TouchableOpacity>
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.content}>
+          <Text style={styles.title}>Growly!</Text>
 
-      <View>
-        <Text>タスク一覧</Text>
-        <FlatList
-          data={tasks}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id}
-        />
-      </View>
-    </View>
+          <View style={styles.inputContainer}>
+            <TextInput
+              placeholder="新しいタスクを入力..."
+              placeholderTextColor="#ADB5BD"
+              style={styles.input}
+              value={taskText}
+              onChangeText={setTaskText}
+            />
+            <TouchableOpacity style={styles.addButton} onPress={handleAddTask}>
+              <Text style={styles.addButtonText}>+</Text>
+            </TouchableOpacity>
+          </View>
+
+          <Text style={styles.listTitle}>タスク一覧</Text>
+          <FlatList
+            data={tasks}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id}
+            contentContainerStyle={styles.listContainer}
+            showsVerticalScrollIndicator={false}
+          />
+        </View>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
