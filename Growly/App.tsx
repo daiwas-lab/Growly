@@ -3,26 +3,33 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { styles } from './App.styles';
 import { useState } from 'react';
 
+interface Task {
+  id: string;
+  text: string;
+  completed: boolean;
+}
+
 export default function App() {
-  const [taskText, setTaskText] = useState('');
-  const [tasks, setTasks] = useState([]);
+  const [taskText, setTaskText] = useState<string>('');
+  const [tasks, setTasks] = useState<Task[]>([]);
   console.log(taskText);
 
   const handleAddTask = () => {
-    const newTasks = { id: Date.now().toString(), text: taskText, completed: false };
-    setTasks([...tasks, newTasks]);
+    if (taskText.trim() === '') return;
+    const newTask: Task = { id: Date.now().toString(), text: taskText, completed: false };
+    setTasks([...tasks, newTask]);
     console.log('タスクを追加しました');
 
     setTaskText('');
   };
 
-  const handleDeleteTask = (id) => {
+  const handleDeleteTask = (id: string) => {
     const newTasks = tasks.filter((task) => task.id !== id);
     setTasks(newTasks);
     console.log('タスクを削除しました');
   };
 
-  const handleToggleTask = (id) => {
+  const handleToggleTask = (id: string) => {
     const newTasks = tasks.map((task) => {
       if (task.id === id) {
         return { ...task, completed: !task.completed };
@@ -33,7 +40,7 @@ export default function App() {
     console.log('タスクを完了しました');
   };
 
-  const renderItem = ({ item }) => {
+  const renderItem = ({ item }: { item: Task }) => {
     return (
       <View style={styles.card}>
         <View style={styles.taskInfo}>
