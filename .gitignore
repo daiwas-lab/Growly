@@ -43,3 +43,6 @@ yarn-error.*
 /android
 Growly/ios
 Growly/android
+
+# local command notes
+.commands.md

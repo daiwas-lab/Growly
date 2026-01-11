@@ -11,10 +11,16 @@ RUN npm install -g expo-cli eas-cli @expo/ngrok
 # Configure git to allow all directories (prevents "dubious ownership" errors with EAS Build)
 RUN git config --global --add safe.directory '*'
 
-WORKDIR /app
+WORKDIR /app/Growly
 
-# The app code will be in a subdirectory (e.g., Growly)
-# but we set /app as the home of our container workspace.
+# 依存関係ファイルをコピーしてインストール
+COPY Growly/package*.json ./
+RUN npm install
+
+# アプリケーションのコードをコピー
+COPY Growly ./
+
 EXPOSE 8081
 
+# 起動コマンドは docker-compose 側で制御するため、ここでは最小限の設定に
 CMD ["sh"]

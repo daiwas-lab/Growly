@@ -1,27 +1,27 @@
 import { Text, View, TouchableOpacity } from 'react-native';
-import { Task } from '../types';
+import { Task } from '../models/Task';
 import { styles } from '../App.styles';
 
 interface TaskItemProps {
   item: Task;
-  onToggle: (id: string) => void;
-  onDelete: (id: string) => void;
+  onToggle: (id: number) => void;
+  onDelete: (id: number) => void;
 }
 
 export const TaskItem = ({ item, onToggle, onDelete }: TaskItemProps) => {
   return (
     <View style={styles.card}>
       <View style={styles.taskInfo}>
-        <Text style={[styles.taskText, item.completed && styles.completedTaskText]}>
-          {item.text} {item.completed ? '完了' : '未完了'}
+        <Text style={[styles.taskText, item.isDone && styles.completedTaskText]}>
+          {item.text} ({item.statusLabel})
         </Text>
       </View>
       <View style={styles.actionContainer}>
         <TouchableOpacity
           onPress={() => onToggle(item.id)}
-          style={[styles.actionButton, styles.toggleButton, item.completed && styles.completedToggleButton]}
+          style={[styles.actionButton, styles.toggleButton, item.isDone && styles.completedToggleButton]}
         >
-          <Text style={[styles.toggleButtonText, item.completed && styles.completedToggleButtonText]}>
+          <Text style={[styles.toggleButtonText, item.isDone && styles.completedToggleButtonText]}>
             完了
           </Text>
         </TouchableOpacity>

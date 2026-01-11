@@ -3,6 +3,7 @@ services:
     build: .
     volumes:
       - .:/app
+      - /app/Growly/node_modules
     ports:
       - "8081:8081"
     environment:

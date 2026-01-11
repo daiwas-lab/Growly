@@ -2,38 +2,18 @@ import { Text, View, FlatList } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { styles } from './App.styles';
 import { useState } from 'react';
-import { Task } from './types';
 import { TaskItem } from './components/TaskItem';
 import { TaskInput } from './components/TaskInput';
+import { useTasks } from './hooks/useTasks';
 
 export default function App() {
   const [taskText, setTaskText] = useState<string>('');
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const { tasks, handleAddTask, handleDeleteTask, handleToggleTask } = useTasks();
 
-  const handleAddTask = () => {
+  const onAddTask = () => {
     if (taskText.trim() === '') return;
-    const newTask: Task = { id: Date.now().toString(), text: taskText, completed: false };
-    setTasks([...tasks, newTask]);
-    console.log('タスクを追加しました');
-
+    handleAddTask(taskText);
     setTaskText('');
-  };
-
-  const handleDeleteTask = (id: string) => {
-    const newTasks = tasks.filter((task) => task.id !== id);
-    setTasks(newTasks);
-    console.log('タスクを削除しました');
-  };
-
-  const handleToggleTask = (id: string) => {
-    const newTasks = tasks.map((task) => {
-      if (task.id === id) {
-        return { ...task, completed: !task.completed };
-      }
-      return task;
-    });
-    setTasks(newTasks);
-    console.log('タスクを完了しました');
   };
 
   return (
@@ -45,7 +25,7 @@ export default function App() {
           <TaskInput
             taskText={taskText}
             setTaskText={setTaskText}
-            onAddTask={handleAddTask}
+            onAddTask={onAddTask}
           />
 
           <Text style={styles.listTitle}>タスク一覧</Text>
@@ -58,7 +38,7 @@ export default function App() {
                 onDelete={handleDeleteTask}
               />
             )}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => item.id.toString()}
             contentContainerStyle={styles.listContainer}
             showsVerticalScrollIndicator={false}
           />

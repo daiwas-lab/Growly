@@ -1,5 +1,2 @@
-export interface Task {
-  id: string;
-  text: string;
-  completed: boolean;
-}
+// アプリケーション全体で共有される共通の型定義をここに記述します。
+// 現在、Task関連の定数と型は /models/Task.ts に集約されています。
